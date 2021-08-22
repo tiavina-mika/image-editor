@@ -10,7 +10,7 @@ import { Upload } from "antd";
 const props = (image) => ({
   includeUI: {
     loadImage: {
-      path: image,
+      path: image || "me.jpg",
       name: "SampleImage"
     },
     menu: [],
@@ -28,23 +28,32 @@ const uploadProps = {
 
 const classes = {
   editor: {
+    "& #container": {
+      padding: 0
+    },
+    "& .tui-image-editor-container": {
+      overflow: "hidden"
+    },
     "& .tui-image-editor-header, .tui-image-editor-help-menu, .tui-image-editor-controls": {
       display: "none"
     },
     "& .tui-image-editor-main-container": {
       backgroundColor: "transparent !important"
     }
+  },
+  buttonConainter: {
+    margin: 10
   }
 };
 
 const Editor = () => {
   const editorRef = useRef();
+  const editor = editorRef.current.getInstance();
+
   const [image, setImage] = useState(null);
 
   const handleFlipX = () => {
-    const editorInstance = editorRef.current.getInstance();
-
-    editorInstance.flipX();
+    editor.flipX();
   };
 
   const onUpload = (info) => {
@@ -54,10 +63,17 @@ const Editor = () => {
   return (
     <div css={classes.editor} className="justifyStart">
       <ImageEditor ref={editorRef} {...props(image)} />
-      <Button text="Flip X" onClick={handleFlipX} />
-      <Upload {...uploadProps} onChange={onUpload}>
-        <Button text="Click to Upload" />
-      </Upload>
+
+      <div className="flexRow m-t-20">
+        <div css={classes.buttonConainter}>
+          <Button text="Flip X" onClick={handleFlipX} />
+        </div>
+        <div css={classes.buttonConainter}>
+          <Upload {...uploadProps} onChange={onUpload}>
+            <Button text="Click to Upload" />
+          </Upload>
+        </div>
+      </div>
     </div>
   );
 };
