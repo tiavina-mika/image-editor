@@ -48,15 +48,16 @@ const classes = {
 
 const Editor = () => {
   const editorRef = useRef();
-  const editor = editorRef.current?.getInstance();
 
   const [image, setImage] = useState(null);
 
   const handleFlipX = () => {
+    const editor = editorRef.current?.getInstance();
     editor.flipX();
   };
 
   const onUpload = async (info) => {
+    const editor = editorRef.current?.getInstance();
     await editor.loadImageFromFile(info.file.originFileObj);
     setImage(info.file.originFileObj);
 
@@ -76,8 +77,6 @@ const Editor = () => {
     // const result = editor.crop(editor.getCropzoneRect());
     console.log("rect", rect);
   };
-
-  console.log(image);
 
   return (
     <div css={classes.editor} className="justifyStart">
