@@ -10,7 +10,7 @@ import { Upload } from "antd";
 const props = (image) => ({
   includeUI: {
     loadImage: {
-      path: image || "me.jpg",
+      path: image,
       name: "SampleImage"
     },
     menu: [],
@@ -48,7 +48,7 @@ const classes = {
 
 const Editor = () => {
   const editorRef = useRef();
-  const editor = editorRef.current.getInstance();
+  const editor = editorRef.current?.getInstance();
 
   const [image, setImage] = useState(null);
 
@@ -56,9 +56,28 @@ const Editor = () => {
     editor.flipX();
   };
 
-  const onUpload = (info) => {
+  const onUpload = async (info) => {
+    await editor.loadImageFromFile(info.file.originFileObj);
     setImage(info.file.originFileObj);
+
+    // .then(result => {
+    //   console.log('old : ' + result.oldWidth + ', ' + result.oldHeight);
+    //   console.log('new : ' + result.newWidth + ', ' + result.newHeight);
+    // });
   };
+
+  const crop = async () => {
+    const editor = editorRef.current?.getInstance();
+    // const result = editor.setCropzoneRect(5 / 4);
+    // console.log('result', result);
+
+    // const result = await editor.crop({ top: 0, left: 0, width: 100, height: 100});
+    const rect = editor.getCropzoneRect();
+    // const result = editor.crop(editor.getCropzoneRect());
+    console.log("rect", rect);
+  };
+
+  console.log(image);
 
   return (
     <div css={classes.editor} className="justifyStart">
@@ -72,6 +91,9 @@ const Editor = () => {
           <Upload {...uploadProps} onChange={onUpload}>
             <Button text="Click to Upload" />
           </Upload>
+        </div>
+        <div css={classes.buttonConainter}>
+          <Button text="Crop" onClick={crop} />
         </div>
       </div>
     </div>
